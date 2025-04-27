@@ -1,85 +1,144 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API de Social Media
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descripción
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+API RESTful para una plataforma de redes sociales desarrollada con NestJS, TypeORM y PostgreSQL. Esta API proporciona todas las funcionalidades esenciales para gestionar usuarios, publicaciones, likes y autenticación en una red social moderna.
 
-## Description
+## Características Principales
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Autenticación Segura**: Sistema completo de registro e inicio de sesión con JWT
+- **Gestión de Usuarios**: Registro, perfil, y roles (usuario, admin, super_admin)
+- **Publicaciones**: Crear, editar, eliminar y listar publicaciones con soporte para imágenes
+- **Sistema de Likes**: Implementación escalable de likes con relaciones optimizadas
+- **Seguridad**: Protección de rutas mediante guards de autenticación y roles
+- **Base de Datos**: Estructura relacional optimizada con TypeORM y PostgreSQL
 
-## Project setup
+## Requisitos Previos
+
+- Node.js (v16 o superior)
+- PostgreSQL
+- pnpm (recomendado) o npm
+
+## Instalación
 
 ```bash
-$ pnpm install
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/social-media-api.git
+cd social-media-api
+
+# Instalar dependencias
+pnpm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Edita el archivo .env con tus configuraciones
+
+# Ejecutar migraciones
+pnpm migration:run
+
+# Iniciar en modo desarrollo
+pnpm start:dev
 ```
 
-## Compile and run the project
+## Estructura de la Base de Datos
+
+La API utiliza una estructura de base de datos relacional:
+
+- **Users**: Almacena información de usuarios, credenciales y roles
+- **Posts**: Contiene las publicaciones de los usuarios con soporte para contenido e imágenes
+- **Likes**: Sistema escalable para gestionar las interacciones de "me gusta" entre usuarios y publicaciones
+
+## Endpoints
+
+### Autenticación
+
+- `POST /auth/register` - Registro de nuevo usuario
+- `POST /auth/login` - Inicio de sesión y obtención de token JWT
+
+### Usuarios
+
+- `GET /users` - Obtener lista de usuarios
+- `GET /users/:id` - Obtener información de un usuario específico
+- `PATCH /users/:id` - Actualizar información de usuario
+- `DELETE /users/:id` - Eliminar usuario
+
+### Publicaciones
+
+- `POST /posts` - Crear nueva publicación
+- `GET /posts` - Obtener lista de publicaciones con paginación
+- `GET /posts/:id` - Obtener una publicación específica
+- `PATCH /posts/:id` - Actualizar una publicación
+- `DELETE /posts/:id` - Eliminar una publicación
+
+### Sistema de Likes
+
+- `POST /likes/create` - Dar "me gusta" a una publicación
+- `DELETE /likes/post/:postId` - Quitar "me gusta" de una publicación
+- `GET /likes/post/:postId` - Obtener todos los likes de una publicación
+- `GET /likes/user/:userId` - Obtener todos los likes dados por un usuario
+- `GET /likes/post/count/:postId` - Contar el número de likes de una publicación
+- `GET /likes/check/:postId` - Verificar si el usuario actual ha dado like a una publicación
+
+## Seguridad
+
+La API implementa múltiples capas de seguridad:
+
+- Autenticación basada en tokens JWT
+- Protección de rutas mediante guards personalizados
+- Validación de datos de entrada con class-validator
+- Sistema de roles para control granular de acceso
+- Encriptación de contraseñas con bcrypt
+
+## Arquitectura
+
+El proyecto sigue una arquitectura modular basada en los principios de NestJS:
+
+- **Módulos**: Organizan el código en unidades cohesivas (auth, users, posts, likes)
+- **Controladores**: Manejan las solicitudes HTTP y delegan la lógica de negocio
+- **Servicios**: Contienen la lógica de negocio principal
+- **Entidades**: Definen el esquema de la base de datos
+- **DTOs**: Validan los datos de entrada
+- **Guards**: Protegen las rutas según los requisitos de autenticación y autorización
+- **Decoradores**: Facilitan el acceso a datos comunes como el usuario actual
+
+## Sistema de Likes Escalable
+
+El sistema de likes se ha diseñado para ser altamente escalable:
+
+- Tabla independiente para almacenar los likes
+- Relaciones optimizadas entre usuarios, publicaciones y likes
+- Índices compuestos para prevenir duplicados (un usuario solo puede dar like una vez a cada publicación)
+- Endpoints eficientes para contar y verificar likes
+- Soporte para análisis de patrones de interacción
+
+## Scripts Disponibles
 
 ```bash
-# development
-$ pnpm run start
+# Desarrollo
+pnpm start:dev
 
-# watch mode
-$ pnpm run start:dev
+# Producción
+pnpm build
+pnpm start:prod
 
-# production mode
-$ pnpm run start:prod
+# Migraciones de base de datos
+pnpm migration:generate -- src/database/migrations/NombreMigracion
+pnpm migration:run
+pnpm migration:revert
+
+# Tests
+pnpm test
+pnpm test:e2e
 ```
 
-## Run tests
+## Contribución
 
-```bash
-# unit tests
-$ pnpm run test
+1. Hacer fork del repositorio
+2. Crear una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
+3. Hacer commit de tus cambios (`git commit -m 'Añadir nueva característica'`)
+4. Hacer push a la rama (`git push origin feature/nueva-caracteristica`)
+5. Abrir un Pull Request
 
-# e2e tests
-$ pnpm run test:e2e
+## Licencia
 
-# test coverage
-$ pnpm run test:cov
-```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Este proyecto está licenciado bajo [LICENCIA] - ver el archivo LICENSE para más detalles.
